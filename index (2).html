@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>BijliBank — Smart Electricity Management</title>
+    
+    <!-- Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- =========================================================
+       1. CINEMATIC STARTUP LOADER & TAGLINE INTRO
+    ========================================================= -->
+    <div id="electric-loader" class="loader-overlay" role="progressbar" aria-label="Loading BijliBank">
+        <!-- Sequence Stage A: Electric Plug Scene -->
+        <div id="loaderStageA" class="loader-stage stage-a active">
+            <div class="loader-title">
+                <span class="electric-bolt">⚡</span>
+                <b>BijliBank</b>
+            </div>
+            
+            <div class="plug-scene">
+                <div class="wire">
+                    <div class="electric-pulse"></div>
+                </div>
+                <div class="plug">
+                    <div class="plug-body"></div>
+                    <div class="pin pin1"></div>
+                    <div class="pin pin2"></div>
+                </div>
+                <div class="socket">
+                    <span class="socket-hole"></span>
+                    <span class="socket-hole"></span>
+                    <div class="contact-flash"></div>
+                </div>
+            </div>
+
+            <div class="loading-bar-wrap">
+                <div class="loading-bar-fill" id="loaderProgressBar"></div>
+            </div>
+            <p class="loader-status" id="loaderStatusText">POWERING UP...</p>
+        </div>
+
+        <!-- Sequence Stage B: Staggered Editorial Tagline Reveal -->
+        <div id="loaderStageB" class="loader-stage stage-b">
+            <div class="tagline-wrap">
+                <span class="tagline-line line-1">Know where your</span>
+                <span class="tagline-line line-2">electricity</span>
+                <span class="tagline-line line-3">goes</span>
+                <span class="tagline-line line-4">before your bill arrives.</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer Overlay -->
+    <div id="mobileDrawerBackdrop" class="mobile-drawer-backdrop hidden"></div>
+
+    <div class="site-shell">
+
+        <!-- =========================================================
+           2. AUTHENTICATION SCREEN
+        ========================================================= -->
+        <section id="authScreen" class="auth-screen">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <span>⚡</span>
+                    <div>
+                        <strong>BijliBank</strong>
+                        <small>SMART ENERGY LABS</small>
+                    </div>
+                </div>
+
+                <div class="auth-heading">
+                    <span class="eyebrow">WELCOME BACK</span>
+                    <h1>Your electricity.<br><em>Under control.</em></h1>
+                    <p>Track live power consumption, predict your upcoming monthly bill, and spot energy spikes.</p>
+                </div>
+
+                <div class="auth-tabs" role="tablist">
+                    <button id="loginTab" class="auth-tab active" type="button" role="tab" aria-selected="true">Login</button>
+                    <button id="signupTab" class="auth-tab" type="button" role="tab" aria-selected="false">Create account</button>
+                </div>
+
+                <form id="authForm" class="auth-form" novalidate>
+                    <div id="nameField" class="form-group hidden">
+                        <label for="authName">Full Name</label>
+                        <input type="text" id="authName" placeholder="e.g. Your Name" autocomplete="name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authEmail">Email Address</label>
+                        <input type="email" id="authEmail" placeholder="reviano@mail.com" required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="authPassword">Password</label>
+                        <input type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password">
+                    </div>
+
+                    <button type="submit" id="authSubmit" class="primary full">Login →</button>
+                    <div id="authMessage" class="auth-message" aria-live="polite"></div>
+                </form>
+
+                <p class="auth-note">Secured local account system for demo &amp; smart energy management.</p>
+            </div>
+
+            <!-- Side Hero Panel (Desktop) -->
+            <div class="auth-side">
+                <span class="side-number">01 / ENERGY FORECASTING</span>
+                <p>Know where your <em>electricity</em> goes before your bill arrives.</p>
+                <span class="side-caption">BIJLIBANK INTELLIGENCE PLATFORM</span>
+            </div>
+        </section>
+
+
+        <!-- =========================================================
+           3. MAIN APPLICATION CONTAINER
+        ========================================================= -->
+        <div id="app" class="app hidden">
+
+            <!-- Top Header & Navigation -->
+            <header class="topbar">
+                <button class="brand" type="button" data-section="dashboard" aria-label="Go to Dashboard">
+                    <div class="brand-mark">⚡</div>
+                    <div class="brand-text">
+                        <strong>BijliBank</strong>
+                        <small>ENERGY MONITOR</small>
+                    </div>
+                </button>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="nav" id="desktopNav" aria-label="Main Navigation">
+                    <button class="nav-link active" data-section="dashboard" type="button">Dashboard</button>
+                    <button class="nav-link" data-section="scan" type="button">Scan Device</button>
+                    <button class="nav-link" data-section="appliances" type="button">Appliances</button>
+                    <button class="nav-link" data-section="analytics" type="button">Analytics</button>
+                    <button class="nav-link" data-section="prediction" type="button">Bill Prediction</button>
+                </nav>
+
+                <div class="top-actions">
+                    <button id="notificationBtn" class="icon-btn" type="button" aria-label="Notifications">🔔</button>
+                    
+                    <div class="profile-wrap" style="position: relative;">
+                        <button id="profileBtn" class="profile" type="button" aria-expanded="false" aria-label="Profile Menu">U</button>
+                        
+                        <!-- Profile Dropdown Menu -->
+                        <div id="profileDropdown" class="profile-dropdown hidden" role="menu">
+                            <div class="profile-info">
+                                <strong id="profileDropdownName">User</strong>
+                                <small id="profileDropdownEmail">user@example.com</small>
+                            </div>
+                            <hr class="dropdown-divider">
+                            <button id="tariffMenuBtn" type="button" role="menuitem">⚙️ Settings &amp; Tariff</button>
+                            <button id="billingHistoryBtn" type="button" role="menuitem">📜 Billing History</button>
+                            <button id="setBudgetBtn" type="button" role="menuitem">🎯 Set Monthly Budget</button>
+                            <button id="exportReportBtn" type="button" role="menuitem">📥 Export CSV Report</button>
+                            <hr class="dropdown-divider">
+                            <button id="headerLogoutBtn" class="danger" type="button" role="menuitem">Logout</button>
+                        </div>
+                    </div>
+
+                    <button id="menuBtn" class="menu-btn" type="button" aria-label="Open Mobile Menu" aria-expanded="false">☰</button>
+                </div>
+
+                <!-- Slide-out Mobile Navigation Drawer -->
+                <div id="mobileDrawer" class="mobile-drawer hidden">
+                    <div class="mobile-drawer-header">
+                        <strong>Navigation</strong>
+                        <button id="closeDrawerBtn" class="icon-btn" type="button" aria-label="Close menu">✕</button>
+                    </div>
+                    <nav class="mobile-nav">
+                        <button class="mobile-nav-link active" data-section="dashboard" type="button">Dashboard</button>
+                        <button class="mobile-nav-link" data-section="scan" type="button">Scan Device</button>
+                        <button class="mobile-nav-link" data-section="appliances" type="button">Appliances</button>
+                        <button class="mobile-nav-link" data-section="analytics" type="button">Analytics</button>
+                        <button class="mobile-nav-link" data-section="prediction" type="button">Bill Prediction</button>
+                    </nav>
+                </div>
+            </header>
+
+            <main class="app-viewport">
+
+                <!-- =========================================================
+                   PAGE 1: DASHBOARD
+                ========================================================= -->
+                <section id="dashboard" class="page active-page">
+                    <section class="hero">
+                        <div class="hero-content">
+                            <span class="eyebrow">SMART ELECTRICITY DASHBOARD</span>
+                            <h1>Hello, <span id="userName">User</span>.<br>Here's your <em>power flow.</em></h1>
+                            <p class="hero-copy">Real-time breakdown of your home appliances, active electricity tariffs, and estimated usage cost before the official bill arrives.</p>
+                            
+                            <div class="hero-actions">
+                                <button class="primary" data-section="scan" type="button">Scan new appliance <span>→</span></button>
+                                <button id="dashboardTariffBtn" class="text-btn" type="button">Configure Rate (₹<span class="current-rate-text">6.08</span>/kWh)</button>
+                            </div>
+                        </div>
+
+                        <div class="hero-card">
+                            <span class="card-label">TODAY'S ESTIMATED USAGE</span>
+                            <strong><span id="todayUsage">0.0</span> <small>kWh</small></strong>
+                            <div class="mini-line">
+                                <span id="usageProgress" style="width: 0%;"></span>
+                            </div>
+                            <p id="usageComparison">Calculated from configured appliances.</p>
+                        </div>
+                    </section>
+
+                    <!-- Stat Summary Grid -->
+                    <div class="stats-grid">
+                        <article class="stat-card">
+                            <span>Today's Cost</span>
+                            <strong id="todayCost">₹0</strong>
+                            <small>Based on active runtime</small>
+                        </article>
+                        <article class="stat-card">
+                            <span>Monthly Energy</span>
+                            <strong id="monthUsage">0.0 <i>kWh</i></strong>
+                            <small>30-day projection</small>
+                        </article>
+                        <article class="stat-card">
+                            <span>Projected Bill</span>
+                            <strong id="estimatedBill">₹0</strong>
+                            <small>Includes fixed charges</small>
+                        </article>
+                        <article class="stat-card green-card">
+                            <span>Potential Savings</span>
+                            <strong id="potentialSaving">₹0</strong>
+                            <small>With optimization</small>
+                        </article>
+                    </div>
+
+                    <!-- Budget Tracker Bar -->
+                    <div id="budgetProgress" class="budget-panel hidden">
+                        <div class="budget-head">
+                            <span>Monthly Budget Tracker</span>
+                            <strong id="budgetProgressText">₹0 / ₹0</strong>
+                        </div>
+                        <div class="budget-bar-track">
+                            <div id="budgetProgressFill" class="budget-bar-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Panels Grid -->
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">VISUAL ANALYTICS</span>
+                            <h2>Usage &amp; Consumers</h2>
+                        </div>
+                        <button id="periodButton" class="select-btn" type="button">This month ▾</button>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h3>Weekly Consumption Curve</h3>
+                                <span>kWh vs Days</span>
+                            </div>
+                            <div class="chart">
+                                <div class="grid-line g1"></div>
+                                <div class="grid-line g2"></div>
+                                <div class="grid-line g3"></div>
+                                <svg viewBox="0 0 700 175" preserveAspectRatio="none">
+                                    <path id="usagePath" d="M0,175 L700,175" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                                </svg>
+                                <div class="x-axis">
+                                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h3>Top Appliances</h3>
+                                <span>Monthly kWh</span>
+                            </div>
+                            <div id="topAppliances" class="appliance-bars">
+                                <div class="empty-state">No appliances added yet.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Insights Card -->
+                    <div class="insight">
+                        <div class="insight-symbol">💡</div>
+                        <div>
+                            <span class="eyebrow">AI POWER INSIGHT</span>
+                            <h3 id="insightTitle">Start by scanning your first appliance.</h3>
+                            <p id="insightText">We'll analyse its power rating and estimate how much electricity it uses.</p>
+                        </div>
+                        <button class="light-btn" data-section="scan" type="button">Scan Device</button>
+                    </div>
+                </section>
+
+
+<!-- =========================================================
+                   PAGE 2: SCAN DEVICE
+========================================================= -->
+<section id="scan" class="page">
+    <div class="section-intro">
+        <span class="eyebrow">APPLIANCE SCANNER</span>
+        <h1>Identify equipment. <em>Calculate load.</em></h1>
+        <p>Upload a photo or nameplate image of your appliance to instantly calculate its wattage, hourly cost, and monthly bill impact.</p>
+    </div>
+
+    <div class="scan-layout">
+        <div class="scan-box scan-corners">
+            <div class="scan-icon">📷</div>
+            <h2>Scan Device Nameplate</h2>
+            <p>Take or upload a picture of the power specification sticker on your appliance.</p>
+            
+            <div class="scan-actions-group">
+                <label class="upload-label primary">
+                    Choose Photo
+                    <input type="file" id="devicePhoto" accept="image/*">
+                </label>
+                <button id="cameraBtn" class="secondary" type="button">Use Camera 📸</button>
+                <button id="torchBtn" class="secondary hidden" type="button">⚡ Flash: Off</button>
+                <button id="demoScan" class="secondary" type="button">Try Demo Scan ✨</button>
+            </div>
+            
+            <p id="scanStatus" class="scan-status" aria-live="polite">No image selected</p>
+            <button id="retakeBtn" class="link-btn hidden" type="button">Clear selection</button>
+        </div>
+
+        <div class="scan-info">
+            <span class="eyebrow">HOW IT WORKS</span>
+            <div class="step">
+                <b>01</b>
+                <div>
+                    <strong>Capture Nameplate</strong>
+                    <small>Focus on specs listing Watts (W) or Amperes (A).</small>
+                </div>
+            </div>
+            <div class="step">
+                <b>02</b>
+                <div>
+                    <strong>Verify Parameters</strong>
+                    <small>Our parser auto-populates power rating and estimated daily hours.</small>
+                </div>
+            </div>
+            <div class="step">
+                <b>03</b>
+                <div>
+                    <strong>Track Impact</strong>
+                    <small>Add directly to your home inventory to update your live bill projection.</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scan Result Card -->
+    <div id="scanResult" class="result-card hidden">
+        <div class="result-title">
+            <div class="device-dot"></div>
+            <div>
+                <span class="eyebrow">DETECTED DEVICE</span>
+                <h2 id="detectedDevice">Split AC · 1.5 Ton</h2>
+            </div>
+            <span id="loadWarningBadge" class="tag">VERIFIED</span>
+        </div>
+
+        <div class="result-grid">
+            <div class="input-row">
+                <span>Appliance Name</span>
+                <input type="text" id="deviceName" value="Air Conditioner">
+            </div>
+            <div class="input-row">
+                <span>Power Rating (Watts)</span>
+                <input type="number" id="powerInput" value="1500" min="1" step="1">
+            </div>
+            <div class="input-row">
+                <span>Usage Hours / Day</span>
+                <input type="number" id="hours" value="6" min="0" max="24" step="0.5">
+            </div>
+            <div class="result-row">
+                <span>Daily Usage</span>
+                <strong id="dailyKwh">9.00 kWh</strong>
+            </div>
+            <div class="result-row">
+                <span>Monthly Usage</span>
+                <strong id="monthlyKwh">270.0 kWh</strong>
+            </div>
+            <div class="result-row">
+                <span>Est. Monthly Cost</span>
+                <strong id="monthlyCost">₹1,642</strong>
+            </div>
+        </div>
+
+        <div class="extra-use">
+            <span>High-power load impact (+2 hrs extra daily runtime):</span>
+            <strong id="extraCost">+ ₹548/month</strong>
+        </div>
+
+        <button id="addDevice" class="primary full" type="button">Add to my appliances →</button>
+    </div>
+</section>
+
+
+
+                <!-- =========================================================
+                   PAGE 3: APPLIANCES
+                ========================================================= -->
+                <section id="appliances" class="page">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">MANAGEMENT</span>
+                            <h1>Registered <em>Appliances</em></h1>
+                        </div>
+                        <div class="appliance-actions-top">
+                            <button id="addManuallyBtn" class="secondary" type="button">+ Add Manually</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="filter-bar">
+                        <button class="filter-tab active" data-filter="all" type="button">All Devices</button>
+                        <button class="filter-tab" data-filter="heavy" type="button">Heavy Loads (≥800W)</button>
+                        <button class="filter-tab" data-filter="light" type="button">Light Loads (&lt;800W)</button>
+                    </div>
+
+                    <!-- Dynamic Appliance Cards Grid -->
+                    <div id="deviceGrid" class="device-grid">
+                        <article class="device-card add-card" data-section="scan">
+                            <div class="plus">+</div>
+                            <h3>Add appliance</h3>
+                            <p>Scan a new device</p>
+                        </article>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                   PAGE 4: ANALYTICS
+                ========================================================= -->
+                <section id="analytics" class="page">
+                    <div class="section-intro">
+                        <span class="eyebrow">DEEP INSIGHTS</span>
+                        <h1>Consumption <em>Breakdown</em></h1>
+                        <p>Analyze how electricity is distributed across your connected appliances and track historical trends.</p>
+                    </div>
+
+                    <div class="analytics-stats">
+                        <div>
+                            <span>Total Monthly Energy</span>
+                            <strong id="analyticsTotal">0.0 kWh</strong>
+                            <small>All devices combined</small>
+                        </div>
+                        <div>
+                            <span>Daily Average</span>
+                            <strong id="analyticsAverage">0.0 kWh</strong>
+                            <small>Per 24-hour cycle</small>
+                        </div>
+                        <div>
+                            <span>Highest Consumer</span>
+                            <strong id="analyticsHighest">—</strong>
+                            <small>Primary power drawer</small>
+                        </div>
+                    </div>
+
+                    <div class="content-grid">
+                        <div class="panel large-chart">
+                            <div class="panel-head">
+                                <h3>Monthly Consumption Trend</h3>
+                                <button id="compareMonthsBtn" class="text-btn" type="button">⇄ Compare months: Current</button>
+                            </div>
+                            <div id="analyticsBars" class="bars">
+                                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                                <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+                            </div>
+                            <div class="bar-labels">
+                                <span>Day 1</span>
+                                <span>Day 10</span>
+                                <span>Day 20</span>
+                                <span>Day 30</span>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-head">
+                                <h3>Load Share</h3>
+                                <span>Proportional</span>
+                            </div>
+                            <div class="donut" id="analyticsDonut">
+                                <div>
+                                    <strong id="donutTotal">100%</strong>
+                                    <span>Active Loads</span>
+                                </div>
+                            </div>
+                            <ul class="legend" id="consumptionLegend">
+                                <li><i></i> Heavy Equipment <b>80%</b></li>
+                                <li><i style="background: var(--cream-dark);"></i> Base Load <b>20%</b></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- =========================================================
+                   PAGE 5: BILL PREDICTION
+                ========================================================= -->
+                <section id="prediction" class="page">
+                    <div class="section-intro">
+                        <span class="eyebrow">FINANCIAL FORECAST</span>
+                        <h1>Predicted <em>Electricity Bill</em></h1>
+                        <p>Smart tariff engine calculations using active unit rates, fixed meter fees, and estimated local taxes.</p>
+                    </div>
+                    <div class="prediction-card">
+                        <div>
+                            <span class="eyebrow">ESTIMATED MONTHLY TOTAL</span>
+                            <h2><span id="predictionAmount">₹0</span> <span id="predictionRange">– ₹0</span></h2>
+                            <p>Calculated projection based on 30 days continuous usage.</p>
+                            
+                            <div class="meter">
+                                <div id="predictionMeter" class="meter-fill" style="width: 0%;"></div>
+                                <div class="meter-labels">
+                                    <span>Low Load</span>
+                                    <span id="predictionMiddle">₹0</span>
+                                    <span>Peak Cap</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bill-breakdown">
+                            <h3>Tariff Cost Breakdown</h3>
+                            <div>
+                                <span>Energy Charges (kWh Usage)</span>
+                                <strong id="energyCharges">₹0</strong>
+                            </div>
+                            <div>
+                                <span>Fixed / Meter Fee</span>
+                                <strong id="fixedCharges">₹100</strong>
+                            </div>
+                            <div>
+                                <span>Estimated Taxes &amp; Surcharges (5%)</span>
+                                <strong id="taxCharges">₹0</strong>
+                            </div>
+                            <div class="total">
+                                <span>Estimated Total Payable</span>
+                                <strong id="predictionTotal">₹100</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Personalised Saving Tip -->
+                    <div class="tip-box">
+                        <span>💡</span>
+                        <div>
+                            <strong id="savingTipTitle">Your personalised saving tip</strong>
+                            <p id="savingTip">Add appliances and usage data to receive personalised suggestions.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </main>
+
+            <!-- Site Footer -->
+            <footer>
+                <span>BijliBank SaaS</span>
+                <span>Smart Energy Intelligence System</span>
+                <button type="button" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to top ↑</button>
+            </footer>
+
+        </div>
+    </div>
+
+
+    <!-- =========================================================
+       4. MODALS & OVERLAYS
+    ========================================================= -->
+
+    <!-- Modal 1: Tariff & Rate Settings -->
+    <div id="tariffModal" class="modal-overlay hidden" role="dialog" aria-labelledby="tariffModalTitle" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="tariffModalTitle">Electricity Tariff Settings</h3>
+                <button class="close-btn" type="button" data-close-modal="tariffModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="tariffRateInput">Electricity Rate (₹ per kWh / Unit)</label>
+                    <input type="number" id="tariffRateInput" step="0.01" min="0.1" value="6.08">
+                </div>
+                <div class="form-group">
+                    <label for="tariffFixedInput">Fixed Monthly Charge (₹)</label>
+                    <input type="number" id="tariffFixedInput" step="1" min="0" value="100">
+                </div>
+                <div id="tariffMessage" class="form-message" aria-live="polite"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="secondary" type="button" data-close-modal="tariffModal">Cancel</button>
+                <button id="saveTariffBtn" class="primary" type="button">Save Tariff</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 2: Billing History -->
+    <div id="billingHistoryModal" class="modal-overlay hidden" role="dialog" aria-labelledby="billingHistoryTitle" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="billingHistoryTitle">Historical Billing Trends</h3>
+                <button class="close-btn" type="button" data-close-modal="billingHistoryModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="billingHistoryList" class="billing-history-list">
+                    <div class="empty-state">Add appliances to build your billing history.</div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="secondary" type="button" data-close-modal="billingHistoryModal">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Manual Appliance Entry -->
+    <div id="manualAddModal" class="modal-overlay hidden" role="dialog" aria-labelledby="manualAddTitle" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="manualAddTitle">Add Appliance Manually</h3>
+                <button class="close-btn" type="button" data-close-modal="manualAddModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="manualNameInput">Appliance Name</label>
+                    <input type="text" id="manualNameInput" placeholder="e.g. Microwave Oven">
+                </div>
+                <div class="form-group">
+                    <label for="manualPowerInput">Power Rating (Watts)</label>
+                    <input type="number" id="manualPowerInput" placeholder="1200" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="manualHoursInput">Daily Runtime (Hours)</label>
+                    <input type="number" id="manualHoursInput" placeholder="2" min="0" max="24" step="0.5">
+                </div>
+                <div id="manualAddMessage" class="form-message" aria-live="polite"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="secondary" type="button" data-close-modal="manualAddModal">Cancel</button>
+                <button id="saveManualAddBtn" class="primary" type="button">Add Appliance</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 4: Edit Appliance -->
+    <div id="editApplianceModal" class="modal-overlay hidden" role="dialog" aria-labelledby="editApplianceTitle" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="editApplianceTitle">Edit Appliance Details</h3>
+                <button class="close-btn" type="button" data-close-modal="editApplianceModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="editNameInput">Appliance Name</label>
+                    <input type="text" id="editNameInput">
+                </div>
+                <div class="form-group">
+                    <label for="editPowerInput">Power Rating (Watts)</label>
+                    <input type="number" id="editPowerInput" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="editHoursInput">Daily Usage Hours</label>
+                    <input type="number" id="editHoursInput" min="0" max="24" step="0.5">
+                </div>
+                <div id="editApplianceMessage" class="form-message" aria-live="polite"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="secondary" type="button" data-close-modal="editApplianceModal">Cancel</button>
+                <button id="saveEditApplianceBtn" class="primary" type="button">Save Changes</button>
+            </div>
+        </div>
+    </div>
+    <!-- Modal 5: Budget Target Settings -->
+    <div id="budgetModal" class="modal-overlay hidden" role="dialog" aria-labelledby="budgetModalTitle" aria-modal="true">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3 id="budgetModalTitle">Set Monthly Electricity Budget</h3>
+                <button class="close-btn" type="button" data-close-modal="budgetModal" aria-label="Close modal">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="budgetInput">Target Budget Amount (₹)</label>
+                    <input type="number" id="budgetInput" placeholder="3000" min="100" step="50">
+                </div>
+                <div id="budgetMessage" class="form-message" aria-live="polite"></div>
+            </div>
+            <div class="modal-foot">
+                <button class="secondary" type="button" data-close-modal="budgetModal">Cancel</button>
+                <button id="saveBudgetBtn" class="primary" type="button">Set Budget</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
